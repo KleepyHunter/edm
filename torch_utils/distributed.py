@@ -8,6 +8,7 @@
 import os
 import torch
 from . import training_stats
+import torch.distributed as dist
 
 #----------------------------------------------------------------------------
 
