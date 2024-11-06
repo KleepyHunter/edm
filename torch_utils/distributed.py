@@ -30,7 +30,7 @@ def init():
         torch.cuda.set_device(int(os.environ.get('LOCAL_RANK', '0')))
     
     # Sync device if running with multiple GPUs
-    sync_device = torch.device('cuda') if dist.get_world_size() > 1 and torch.cuda.is_available() else None
+    sync_device = torch.device('cuda') if torch.distributed.get_world_size() > 1 and torch.cuda.is_available() else None
 
     # Initialize training stats with multiprocessing sync
     training_stats.init_multiprocessing(rank=dist.get_rank(), sync_device=sync_device)
