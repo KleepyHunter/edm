@@ -12,23 +12,28 @@ from . import training_stats
 #----------------------------------------------------------------------------
 
 def init():
-    if 'MASTER_ADDR' not in os.environ:
-        os.environ['MASTER_ADDR'] = 'localhost'
-    if 'MASTER_PORT' not in os.environ:
-        os.environ['MASTER_PORT'] = '29500'
-    if 'RANK' not in os.environ:
-        os.environ['RANK'] = '0'
-    if 'LOCAL_RANK' not in os.environ:
-        os.environ['LOCAL_RANK'] = '0'
-    if 'WORLD_SIZE' not in os.environ:
-        os.environ['WORLD_SIZE'] = '1'
+    # Set default environment variables if not set
+    os.environ.setdefault('MASTER_ADDR', 'localhost')
+    os.environ.setdefault('MASTER_PORT', '29500')
+    os.environ.setdefault('RANK', '0')
+    os.environ.setdefault('LOCAL_RANK', '0')
+    os.environ.setdefault('WORLD_SIZE', '1')
 
-    backend = 'gloo'
-    torch.distributed.init_process_group(backend=backend, init_method='env://')
-    torch.cuda.set_device(int(os.environ.get('LOCAL_RANK', '0')))
+    # Set backend based on availability
+    backend = 'nccl' if torch.cuda.is_available() else 'gloo'
+    
+    # Initialize process group
+    dist.init_process_group(backend=backend, init_method='env://')
+    
+    # Set CUDA device if available
+    if torch.cuda.is_available():
+        torch.cuda.set_device(int(os.environ.get('LOCAL_RANK', '0')))
+    
+    # Sync device if running with multiple GPUs
+    sync_device = torch.device('cuda') if dist.get_world_size() > 1 and torch.cuda.is_available() else None
 
-    sync_device = torch.device('cuda') if get_world_size() > 1 else None
-    training_stats.init_multiprocessing(rank=get_rank(), sync_device=sync_device)
+    # Initialize training stats with multiprocessing sync
+    training_stats.init_multiprocessing(rank=dist.get_rank(), sync_device=sync_device)
 
 #----------------------------------------------------------------------------
 
