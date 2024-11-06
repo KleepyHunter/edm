@@ -23,7 +23,7 @@ def init():
     backend = 'nccl' if torch.cuda.is_available() else 'gloo'
     
     # Initialize process group
-    dist.init_process_group(backend=backend, init_method='env://')
+    torch.distributed.init_process_group(backend=backend, init_method='env://')
     
     # Set CUDA device if available
     if torch.cuda.is_available():
