@@ -156,7 +156,7 @@ def training_loop(
 
         # Print status line, accumulating the same information in training_stats.
         tick_end_time = time.time()
-        loss_list.append(loss)
+        loss_list.append(loss.item() if loss.ndim == 0 else loss.mean().item())
         fields = []
         fields += [f"tick {training_stats.report0('Progress/tick', cur_tick):<5d}"]
         fields += [f"kimg {training_stats.report0('Progress/kimg', cur_nimg / 1e3):<9.1f}"]
