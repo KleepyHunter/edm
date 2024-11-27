@@ -219,7 +219,7 @@ def training_loop(
     
     # Function to check if current process is rank 0
     def is_rank_zero():
-        return not dist.is_initialized() or dist.get_rank() == 0
+        return dist.get_rank() == 0
     
     # Plotting (only rank 0 generates the plot)
     if is_rank_zero():
