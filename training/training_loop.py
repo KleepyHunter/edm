@@ -212,7 +212,21 @@ def training_loop(
             break
 
     # Done.
-    dist.print0(loss_list)
+    import matplotlib.pyplot as plt
+
+    # Example array
+    data = loss_list
+    
+    # Plotting
+    plt.figure(figsize=(8, 5))
+    plt.plot(range(len(data)), data, marker='o', linestyle='-', color='b', label='Data')
+    plt.title("Plot of Losses")
+    plt.xlabel("Index")
+    plt.ylabel("Value")
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.show()
+    
     dist.print0('Exiting...')
 
 #----------------------------------------------------------------------------
