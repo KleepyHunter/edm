@@ -55,6 +55,7 @@ def training_loop(
     torch.backends.cudnn.allow_tf32 = False
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
+    loss_list = []
 
     # Select batch size per GPU.
     batch_gpu_total = batch_size // dist.get_world_size()
@@ -155,6 +156,7 @@ def training_loop(
 
         # Print status line, accumulating the same information in training_stats.
         tick_end_time = time.time()
+        loss_list.append(loss)
         fields = []
         fields += [f"tick {training_stats.report0('Progress/tick', cur_tick):<5d}"]
         fields += [f"kimg {training_stats.report0('Progress/kimg', cur_nimg / 1e3):<9.1f}"]
@@ -210,7 +212,7 @@ def training_loop(
             break
 
     # Done.
-    dist.print0()
+    dist.print0(loss_list)
     dist.print0('Exiting...')
 
 #----------------------------------------------------------------------------
