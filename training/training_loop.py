@@ -117,7 +117,7 @@ def training_loop(
     tick_start_nimg = cur_nimg
     tick_start_time = time.time()
     maintenance_time = tick_start_time - start_time
-    dist.update_progress(cur_nimg // 1000, total_kimg)
+    dist.update_progress(cur_nimg // 100, total_kimg)
     stats_jsonl = None
     while True:
 
@@ -213,19 +213,27 @@ def training_loop(
 
     # Done.
     import matplotlib.pyplot as plt
-
+    
     # Example array
     data = loss_list
     
-    # Plotting
-    plt.figure(figsize=(8, 5))
-    plt.plot(range(len(data)), data, marker='o', linestyle='-', color='b', label='Data')
-    plt.title("Plot of Losses")
-    plt.xlabel("Index")
-    plt.ylabel("Value")
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.legend()
-    plt.show()
+    # Function to check if current process is rank 0
+    def is_rank_zero():
+        return not dist.is_initialized() or dist.get_rank() == 0
+    
+    # Plotting (only rank 0 generates the plot)
+    if is_rank_zero():
+        plt.figure(figsize=(8, 5))
+        plt.plot(range(len(data)), data, marker='o', linestyle='-', color='b', label='Data')
+        plt.title("Plot of Array Values")
+        plt.xlabel("Index")
+        plt.ylabel("Value")
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.legend()
+        plt.show()
+
+    dist.print0(data)
+
     
     dist.print0('Exiting...')
 
