@@ -133,6 +133,7 @@ def calc(image_path, ref_path, num_expected, seed, batch):
     if dist.get_rank() == 0:
         fid = calculate_fid_from_inception_stats(mu, sigma, ref['mu'], ref['sigma'])
         print(f'{fid:g}')
+        return fid
     torch.distributed.barrier()
 
 #----------------------------------------------------------------------------
