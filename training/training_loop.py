@@ -16,6 +16,7 @@ import psutil
 import numpy as np
 import torch
 import dnnlib
+import wandb
 from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
@@ -46,6 +47,7 @@ def training_loop(
     resume_kimg         = 0,        # Start from the given training progress.
     cudnn_benchmark     = True,     # Enable torch.backends.cudnn.benchmark?
     device              = torch.device('cuda'),
+    wandb_session_id    = None
 ):
     # Initialize.
     start_time = time.time()
@@ -56,6 +58,13 @@ def training_loop(
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
     loss_list = []
+    import wandb
+
+    wandb.init(
+        project="EDM Benchmarker",
+        id=wandb_session_id,  # Replace with the run ID from your notebook
+        resume="allow"          # Resume the existing run
+    )
 
     # Select batch size per GPU.
     batch_gpu_total = batch_size // dist.get_world_size()
@@ -157,6 +166,7 @@ def training_loop(
         # Print status line, accumulating the same information in training_stats.
         tick_end_time = time.time()
         loss_list.append(loss.item() if loss.ndim == 0 else loss.mean().item())
+        wandb.log({"Loss": loss.item() if loss.ndim == 0 else loss.mean().item()})
         fields = []
         fields += [f"tick {training_stats.report0('Progress/tick', cur_tick):<5d}"]
         fields += [f"kimg {training_stats.report0('Progress/kimg', cur_nimg / 1e3):<9.1f}"]
