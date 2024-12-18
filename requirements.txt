@@ -8,5 +8,5 @@ requests
 tqdm
 imageio
 imageio-ffmpeg>=0.4.3
-pysng
+pyspng
 wandb
