@@ -67,7 +67,7 @@ def parse_int_list(s):
 @click.option('--workers',       help='DataLoader worker processes', metavar='INT',                 type=click.IntRange(min=1), default=1, show_default=True)
 
 # I/O-related.
-@click.option('--wandb-session-id', help='WandB session ID  [default: none]', metavar='STR',        type=str)
+@click.option('--wandb-session', help='WandB session ID  [default: none]', metavar='STR',           type=str)
 @click.option('--desc',          help='String to include in result dir name', metavar='STR',        type=str)
 @click.option('--nosubdir',      help='Do not create a subdirectory for results',                   is_flag=True)
 @click.option('--tick',          help='How often to print progress', metavar='KIMG',                type=click.IntRange(min=1), default=50, show_default=True)
