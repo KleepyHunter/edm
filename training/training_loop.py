@@ -62,7 +62,7 @@ def training_loop(
 
     wandb.init(
         project="EDM Benchmarker",
-        id=wandb_session_id,  # Replace with the run ID from your notebook
+        id=wandb_session,  # Replace with the run ID from your notebook
         resume="allow"          # Resume the existing run
     )
 
