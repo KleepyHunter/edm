@@ -47,7 +47,7 @@ def training_loop(
     resume_kimg         = 0,        # Start from the given training progress.
     cudnn_benchmark     = True,     # Enable torch.backends.cudnn.benchmark?
     device              = torch.device('cuda'),
-    wandb_session_id    = None
+    wandb_session       = None
 ):
     # Initialize.
     start_time = time.time()
