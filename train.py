@@ -100,7 +100,7 @@ def main(**kwargs):
     c.network_kwargs = dnnlib.EasyDict()
     c.loss_kwargs = dnnlib.EasyDict()
     c.optimizer_kwargs = dnnlib.EasyDict(class_name='torch.optim.Adam', lr=opts.lr, betas=[0.9,0.999], eps=1e-8)
-    c.wandb_session_id = dnnlib.EasyDict(wandb_session_id=None)
+    c.wandb_session = dnnlib.EasyDict()
 
     # Validate dataset options.
     try:
