@@ -60,6 +60,8 @@ def training_loop(
     loss_list = []
     import wandb
 
+    print("WandB session ID = ", wandb_session)
+
     wandb.init(
         project="EDM Benchmarker",
         id=wandb_session,  # Replace with the run ID from your notebook
