@@ -60,14 +60,6 @@ def training_loop(
     loss_list = []
     import wandb
 
-    print("WandB session ID = ", wandb_session)
-
-    wandb.init(
-        project="EDM Benchmarker",
-        id=wandb_session,  # Replace with the run ID from your notebook
-        resume="allow"          # Resume the existing run
-    )
-
     # Select batch size per GPU.
     batch_gpu_total = batch_size // dist.get_world_size()
     if batch_gpu is None or batch_gpu > batch_gpu_total:
