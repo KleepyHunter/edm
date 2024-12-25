@@ -59,6 +59,11 @@ def training_loop(
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
     loss_list = []
     import wandb
+    wandb.init(
+        project="EDM Benchmarker",
+        name="cifar10_exp_0",
+        reinit=False  # Only if needed
+    )
 
     # Select batch size per GPU.
     batch_gpu_total = batch_size // dist.get_world_size()
