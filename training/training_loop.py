@@ -176,6 +176,7 @@ def training_loop(
         fields += [f"cpumem {training_stats.report0('Resources/cpu_mem_gb', psutil.Process(os.getpid()).memory_info().rss / 2**30):<6.2f}"]
         fields += [f"gpumem {training_stats.report0('Resources/peak_gpu_mem_gb', torch.cuda.max_memory_allocated(device) / 2**30):<6.2f}"]
         fields += [f"reserved {training_stats.report0('Resources/peak_gpu_mem_reserved_gb', torch.cuda.max_memory_reserved(device) / 2**30):<6.2f}"]
+        fields += [f"reserved {training_stats.report0('Loss/loss', ):<6.2f}", loss.item() if loss.ndim == 0 else loss.mean().item()]
         torch.cuda.reset_peak_memory_stats()
         dist.print0(' '.join(fields))
 
